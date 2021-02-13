@@ -2,7 +2,7 @@ const width = 28;
 const grid = document.querySelector('.grid');
 const scoreDisplay = document.querySelector('#score');
 let squares = [];
-
+let score = 0;
 //28 * 28 = 784
 // 0 - pac-dots
 // 1 - wall
@@ -93,6 +93,15 @@ function control(event) {
             break;
     }
     squares[pacmanCurrentIndex].classList.add('pacman');
+    pacDotEaten();
 }
 
 document.addEventListener('keydown', control);
+
+function pacDotEaten() {
+    if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
+        squares[pacmanCurrentIndex].classList.remove('pac-dot');
+        score++
+        scoreDisplay.textContent = score;
+    }
+}
