@@ -96,6 +96,9 @@ function control(event) {
     }
     squares[pacmanCurrentIndex].classList.add('pacman');
     pacDotEaten();
+    powerPelletEaten();
+    checkForWin();
+    checkForGameOver();
 }
 
 document.addEventListener('keydown', control);
@@ -106,6 +109,22 @@ function pacDotEaten() {
         score++
         scoreDisplay.textContent = score;
     }
+}
+
+function powerPelletEaten() {
+    // is square pacman contains  a power peellt
+    if (squares[pacmanCurrentIndex].classList.contains('power-pallet')) {
+        squares[pacmanCurrentIndex].classList.remove('power-pallet')
+        score += 10;
+        scoreDisplay.textContent = score;
+        ghosts.forEach(ghost => ghost.isScared = true);
+        setTimeout(() => {
+            ghosts.forEach(ghost => ghost.isScared = false)
+        }, 10000)
+    }
+
+
+
 }
 
 class Ghost {
@@ -128,7 +147,10 @@ const ghosts = [
 
 // draw ghosts onto grid
 
-ghosts.forEach(ghost => squares[ghost.startIndex].classList.add(ghost.className));
+ghosts.forEach(ghost => {
+    squares[ghost.currentIndex].classList.add(ghost.className);
+    squares[ghost.currentIndex].classList.add('ghost');
+});
 
 // move the ghosts
 ghosts.forEach(ghost => moveGhost(ghost))
@@ -136,16 +158,66 @@ ghosts.forEach(ghost => moveGhost(ghost))
 function moveGhost(ghost) {
     console.log('moved ghost')
     const directions = [-1, +1, -width, width];
-    const random = Math.floor(Math.random() * directions.length);
+    let random = Math.floor(Math.random() * directions.length);
     let direction = directions[random];
 
     ghost.timerId = setInterval(function() {
-        // remove any ghost
-        squares[ghost.currentIndex].classList.remove(ghost.className);
-        // add direction to currentIndex
-        ghost.currentIndex += direction;
-        // re-add ghost class
-        squares[ghost.currentIndex].classList.add(ghost.className);
+        // check if next position does not contain a wall or another ghost
+        if (!squares[ghost.currentIndex + direction].classList.contains('wall') &&
+            !squares[ghost.currentIndex + direction].classList.contains('ghost'))
+
+        { // remove any ghost
+            squares[ghost.currentIndex].classList.remove(ghost.className);
+            squares[ghost.currentIndex].classList.remove('ghost', 'scared-ghost');
+            // add direction to currentIndex
+            ghost.currentIndex += direction;
+            // re-add ghost class
+            squares[ghost.currentIndex].classList.add(ghost.className);
+            squares[ghost.currentIndex].classList.add('ghost');
+        } else {
+            direction = directions[Math.floor(Math.random() * directions.length)];
+        }
+
+        // if the ghost is currently scared
+        if (ghost.isScared) {
+            squares[ghost.currentIndex].classList.add('scared-ghost')
+        }
+
+        if ((ghost.isScared) && squares[ghost.currentIndex].classList.contains('pacman')) {
+            squares[ghost.currentIndex].classList.remove(ghost.className, 'ghost', 'scared-ghost');
+            ghost.currentIndex = ghost.startIndex;
+            score += 100;
+            scoreDisplay.textContent = score;
+            squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+        }
+        checkForGameOver();
     }, ghost.speed)
 
+}
+
+// check 4 game over
+
+function checkForGameOver() {
+    //if the square pacman is in contains a ghost AND the square does NOT contain a scared ghost  - actually pacman gets eaten
+    if (squares[pacmanCurrentIndex].classList.contains('ghost') &&
+        !squares[pacmanCurrentIndex].classList.contains('scared-ghost')) {
+        //for each ghost - we need to stop it moving
+        ghosts.forEach(ghost => clearInterval(ghost.timerId))
+            //remove eventlistener from our control function
+        document.removeEventListener('keydown', control);
+        alert('Game Over! You scored: ' + score + '\nLOOSER!');
+
+    }
+}
+
+// check4win
+
+function checkForWin() {
+    if (score === 274) {
+        //for each ghost - we need to stop it moving
+        ghosts.forEach(ghost => clearInterval(ghost.timerId))
+        document.removeEventListener('keydown', control);
+        alert('Game Over! You scored: ' + score + '\nYOU HAVE WON!');
+
+    }
 }
