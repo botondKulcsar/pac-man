@@ -1,3 +1,5 @@
+'use strict';
+
 const width = 28;
 const grid = document.querySelector('.grid');
 const scoreDisplay = document.querySelector('#score');
@@ -114,9 +116,13 @@ class Ghost {
     }
 }
 
-ghosts = [
+const ghosts = [
     new Ghost('blinky', 348, 250),
     new Ghost('pinky', 376, 400),
     new Ghost('inky', 351, 300),
     new Ghost('clyde', 379, 500)
 ]
+
+// draw ghosts onto grid
+
+ghosts.forEach(ghost => squares[ghost.startIndex].classList.add(ghost.className));
