@@ -64,3 +64,28 @@ createBoard();
 // starting pos of pacman
 let pacmanCurrentIndex = 490;
 squares[pacmanCurrentIndex].classList.add('pacman');
+
+function control(event) {
+    squares[pacmanCurrentIndex].classList.remove('pacman');
+    switch (event.keyCode) {
+        case 38:
+            if (pacmanCurrentIndex >= width)
+                pacmanCurrentIndex -= width;
+            break;
+        case 40:
+            if (pacmanCurrentIndex + width < width ** 2)
+                pacmanCurrentIndex += width;
+            break;
+        case 37:
+            if (pacmanCurrentIndex % width !== 0)
+                pacmanCurrentIndex--;
+            break;
+        case 39:
+            if (pacmanCurrentIndex % width < width - 1)
+                pacmanCurrentIndex++;
+            break;
+    }
+    squares[pacmanCurrentIndex].classList.add('pacman');
+}
+
+document.addEventListener('keydown', control);
