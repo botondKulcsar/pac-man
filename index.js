@@ -54,6 +54,7 @@ function createBoard() {
 
         layout[i] === 0 ? squares[i].classList.add('pac-dot') : '';
         layout[i] === 1 ? squares[i].classList.add('wall') : '';
+        layout[i] === 2 ? squares[i].classList.add('ghost-lair') : '';
         layout[i] === 3 ? squares[i].classList.add('power-pallet') : '';
 
     })
@@ -70,23 +71,25 @@ function control(event) {
     switch (event.keyCode) {
         case 38: //key UP
             if (!squares[pacmanCurrentIndex - width].classList.contains('wall') &&
+                !squares[pacmanCurrentIndex - width].classList.contains('ghost-lair') &&
                 pacmanCurrentIndex >= width)
                 pacmanCurrentIndex -= width;
             break;
         case 40: //key DOWN
             if (!squares[pacmanCurrentIndex + width].classList.contains('wall') &&
+                !squares[pacmanCurrentIndex + width].classList.contains('ghost-lair') &&
                 pacmanCurrentIndex + width < width ** 2)
                 pacmanCurrentIndex += width;
             break;
         case 37: //key LEFT
             if (!squares[pacmanCurrentIndex - 1].classList.contains('wall') &&
-                pacmanCurrentIndex % width !== 0)
-                pacmanCurrentIndex--;
+                !squares[pacmanCurrentIndex - 1].classList.contains('ghost-lair') &&
+                pacmanCurrentIndex % width !== 0) { pacmanCurrentIndex--; } else if (pacmanCurrentIndex === 364) pacmanCurrentIndex = 391;
             break;
         case 39: //key RIGHT
             if (!squares[pacmanCurrentIndex + 1].classList.contains('wall') &&
-                pacmanCurrentIndex % width < width - 1)
-                pacmanCurrentIndex++;
+                !squares[pacmanCurrentIndex + 1].classList.contains('ghost-lair') &&
+                pacmanCurrentIndex % width < width - 1) { pacmanCurrentIndex++; } else if (pacmanCurrentIndex === 391) pacmanCurrentIndex = 364;
             break;
     }
     squares[pacmanCurrentIndex].classList.add('pacman');
