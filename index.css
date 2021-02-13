@@ -15,5 +15,24 @@ body {
 .grid div {
     width: 15px;
     height: 15px;
+}
+
+.pac-dot {
+    background: green;
+    border: 5px solid white;
+    box-sizing: border-box;
+}
+
+.wall {
     background: blue;
+}
+
+.power-pallet {
+    background: green;
+    border-radius: 7.5px;
+}
+
+.pacman {
+    background: yellow;
+    border-radius: 7.5px;
 }
