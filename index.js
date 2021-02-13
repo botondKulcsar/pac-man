@@ -44,12 +44,23 @@ const layout = [
 // create board
 
 function createBoard() {
-    layout.forEach(el => {
+    layout.forEach((el, i) => {
+        // create a square
         const square = document.createElement('div');
+        // put it in grid
         grid.appendChild(square);
+        // put square in squares array
         squares.push(square);
-        console.log(squares);
+
+        layout[i] === 0 ? squares[i].classList.add('pac-dot') : '';
+        layout[i] === 1 ? squares[i].classList.add('wall') : '';
+        layout[i] === 3 ? squares[i].classList.add('power-pallet') : '';
+
     })
 }
 
 createBoard();
+
+// starting pos of pacman
+let pacmanCurrentIndex = 490;
+squares[pacmanCurrentIndex].classList.add('pacman');
