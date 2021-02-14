@@ -213,7 +213,7 @@ function checkForGameOver() {
 // check4win
 
 function checkForWin() {
-    if (score === 274) {
+    if (score >= 400) {
         //for each ghost - we need to stop it moving
         ghosts.forEach(ghost => clearInterval(ghost.timerId))
         document.removeEventListener('keydown', control);
